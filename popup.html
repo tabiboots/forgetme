@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <style>
+    body { font: 13px sans-serif; width: 220px; padding: 4px 8px; }
+    p { margin: 6px 0; }
+  </style>
+</head>
+<body>
+  <h3>forgetme</h3>
+  <p>
+    Forget after
+    <input id="interval" type="number" min="0.01" step="any" style="width: 50px">
+    hours
+    <button id="saveInterval">Save</button>
+  </p>
+  <p>Tracked cookies: <span id="tracked"></span></p>
+  <p>Oldest cookie: <span id="oldest"></span></p>
+  <p>Last sweep: <span id="lastSweep"></span></p>
+  <p>Cookies forgotten (all time): <span id="totalForgotten"></span></p>
+  <button id="sweep">Sweep now</button>
+  <button id="openLog">Open log</button>
+  <p id="result"></p>
+  <h4>Scripted actions</h4>
+  <p><button data-action="google">Google: stop ad personalization &amp; activity tracking</button></p>
+  <p><button data-action="x">X: stop personalization, data sharing &amp; Grok training</button></p>
+  <script src="popup.js"></script>
+</body>
+</html>

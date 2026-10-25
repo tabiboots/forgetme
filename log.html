@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>forgetme log</title>
+  <style>
+    body { font: 14px sans-serif; max-width: 480px; margin: 16px auto; padding: 0 12px; }
+    table { border-collapse: collapse; }
+    td { padding: 2px 12px 2px 0; }
+    td:last-child { text-align: right; font-weight: bold; }
+    li { margin: 4px 0; }
+    details ul { margin: 4px 0; color: #555; }
+  </style>
+</head>
+<body>
+  <h2>forgetme log</h2>
+
+  <h3>Totals</h3>
+  <table>
+    <tr><td>Cookies forgotten</td><td id="totalForgotten"></td></tr>
+    <tr><td>Sites whose cookies were forgotten</td><td id="sitesForgotten"></td></tr>
+    <tr><td>History pages forgotten</td><td id="totalPages"></td></tr>
+    <tr><td>Form history wipes</td><td id="totalFormWipes"></td></tr>
+    <tr><td>Cookies remembered right now</td><td id="tracked"></td></tr>
+  </table>
+
+  <h3>Most forgotten sites</h3>
+  <ol id="topSites"></ol>
+
+  <h3>Recent sweeps</h3>
+  <ul id="sweeps"></ul>
+
+  <script src="log.js"></script>
+</body>
+</html>

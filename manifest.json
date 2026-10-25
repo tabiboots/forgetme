@@ -1,0 +1,23 @@
+{
+  "manifest_version": 2,
+  "name": "forgetme",
+  "version": "0.1.0",
+  "description": "A rolling memory for your browser: forgets cookies, history and form data older than a set window.",
+  "permissions": ["cookies", "history", "browsingData", "storage", "alarms", "<all_urls>"],
+  "background": {
+    "scripts": ["background.js"],
+    "persistent": true
+  },
+  "icons": {
+    "48": "icon/icon.png",
+    "96": "icon/icon.png"
+  },
+  "browser_action": {
+    "default_icon": "icon/icon.png",
+    "default_title": "forgetme",
+    "default_popup": "popup.html"
+  },
+  "browser_specific_settings": {
+    "gecko": { "id": "forgetme@local" }
+  }
+}
