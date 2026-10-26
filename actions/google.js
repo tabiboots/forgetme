@@ -1,12 +1,10 @@
 // Scripted action: turn off Google ad personalization and Web & App Activity.
 //
 // Google's markup is generated and changes often, so elements are found by
-// label and visible text rather than class names. English UI only for now.
-// Uses helpers from common.js.
+// label and visible text rather than class names.
 
 (() => {
   function findAdsToggle() {
-    // aria-label reads "Personalized ads are on. Turn off." (or "are off").
     return document.querySelector('button[aria-label^="Personalized ads are"]');
   }
 
@@ -28,7 +26,6 @@
   }
 
   async function turnOffWebAndAppActivity() {
-    // The "Saving activity" card; its text reads "Your Web & App Activity is on/off".
     const card = await waitFor(() =>
       document.querySelector('[aria-label="Button to enable or disable activity controls setting"]')
     );
@@ -36,8 +33,6 @@
     if (!card.textContent.includes("Web & App Activity is on")) return "Web & App Activity was already off.";
 
     card.click();
-    // "Turn off" button opens a dropdown whose first item is also "Turn off".
-    // Already-clicked elements are skipped, so the second step hits the menu item.
     const stuck = await clickSequence(["Turn off", "Turn off", "Got it"], [card]);
     return stuck
       ? `Stopped at "${stuck}". Please finish on this page.`

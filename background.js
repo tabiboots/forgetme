@@ -76,8 +76,9 @@ async function sweep() {
   const now = Date.now();
   const cutoff = now - intervalHours * 60 * 60 * 1000;
 
+  const installedAt = await getInstalledAt(now);
   const cookieDomains = await sweepCookies(now, cutoff);
-  const pages = await sweepHistory(cutoff);
+  const pages = await sweepHistory(cutoff, installedAt);
   const formWiped = await sweepFormData(now, cutoff);
 
   await recordSweep(now, cookieDomains, pages, formWiped);
@@ -115,7 +116,7 @@ async function recordSweep(time, cookieDomains, pages, formWiped) {
   });
 }
 
-// Hostnames of every open tab, e.g. "www.youtube.com".
+// Hostnames of every open tab.
 async function getOpenTabHosts() {
   const hosts = [];
   for (const tab of await browser.tabs.query({})) {
@@ -125,8 +126,7 @@ async function getOpenTabHosts() {
 }
 
 // True for a site's own cookie while that site is open in a tab, so nobody is
-// logged out mid-use. Third-party cookies (partitioned under another site) are
-// never protected.
+// logged out mid-use.
 function isInUse(cookie, openHosts) {
   if (cookie.partitionKey) return false;
   const domain = cookie.domain.replace(/^\./, "");
@@ -135,8 +135,6 @@ function isInUse(cookie, openHosts) {
 
 // Removes cookies older than the window. Also stamps any cookie we haven't
 // seen yet (e.g. on first install) and drops records for cookies that are gone.
-// Old cookies of open sites keep their age and are removed in a later sweep,
-// once the tab is closed. Returns the domain of each removed cookie.
 async function sweepCookies(now, cutoff) {
   const openHosts = await getOpenTabHosts();
   const kept = {};
@@ -157,10 +155,21 @@ async function sweepCookies(now, cutoff) {
   return removedDomains;
 }
 
+// Recorded once, on the first sweep after install.
+async function getInstalledAt(now) {
+  const { installedAt } = await browser.storage.local.get("installedAt");
+  if (installedAt) return installedAt;
+  await browser.storage.local.set({ installedAt: now });
+  return now;
+}
+
 // History has real timestamps, so it can roll: delete every visit before the
-// cutoff. Returns how many pages were forgotten completely (pages also visited
-// recently lose their old visits but stay in history, so aren't counted).
-async function sweepHistory(cutoff) {
+// cutoff.
+async function sweepHistory(cutoff, installedAt) {
+  // Like existing cookies, existing history gets one full window after
+  // install before anything is deleted, so installing isn't a surprise wipe.
+  if (installedAt > cutoff) return 0;
+
   const oldPages = await browser.history.search({
     text: "", startTime: 0, endTime: cutoff, maxResults: 1000000,
   });
@@ -259,5 +268,5 @@ browser.alarms.onAlarm.addListener(alarm => {
   if (alarm.name === "sweep") sweep();
 });
 
-// Runs whenever the browser starts or the extension is installed.
+// Runs at startup/install
 sweep();

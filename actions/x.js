@@ -1,9 +1,7 @@
 // Scripted action: turn off X (Twitter) personalization and data sharing.
 //
 // Each settings page background.js opens has one or two checkboxes, and on
-// all of them "checked" means "allow more tracking", so we untick every ticked
-// box. This doesn't depend on wording, so it works in any language.
-// Uses helpers from common.js.
+// all of them "checked" means "allow more tracking", so we untick all.
 
 (() => {
   function findCheckboxes() {
